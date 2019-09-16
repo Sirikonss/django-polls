@@ -1,0 +1,4 @@
+# this is a comment line
+ Django >= 2.1.2
+ python >= 3.6
+ python-decouple >= 3.1
