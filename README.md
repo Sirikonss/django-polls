@@ -13,8 +13,8 @@
 
  ## Running
  - git clone https://github.com/Sirikonss/django-polls.git
- - Make sure you already meet all requirements.
+ - Make sure that you already meet all requirements.
  - "python3 manage.py runserver"
 
- 
+
 
