@@ -14,7 +14,8 @@
  ## Running
  - git clone https://github.com/Sirikonss/django-polls.git
  - Make sure that you already meet all requirements.
- - "python3 manage.py runserver"
+ - Change your path to .../django-polls
+ - Runserver by typing "python3 manage.py runserver"
 
 
 
