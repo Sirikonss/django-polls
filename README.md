@@ -1,8 +1,9 @@
 ## Django Polls Application
- (describe the application)
+ This project is for learning the Django creating poll app .
 
  ### Author
  Sirikon Songsaengthong 6110545660
+
 
  ## Requirements
 
