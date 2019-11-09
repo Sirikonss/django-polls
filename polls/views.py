@@ -2,7 +2,10 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views import generic
-from django.utils import timezone
+from django.utils import timezone    
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.forms import UserCreationForm
 
 from .models import Choice, Question
 
@@ -31,9 +34,15 @@ class DetailView(generic.DetailView):
 class ResultsView(generic.DetailView):
     model = Question
     template_name = 'polls/results.html'
-    
 
+
+
+
+@login_required(login_url='/accounts/login/') 
 def vote(request, question_id):
+    user = request.user
+    print("current user is", user.id, "login", user.username)
+    print("Real name:", user.first_name, user.last_name)
     question = get_object_or_404(Question, pk=question_id)
     try:
         selected_choice = question.choice_set.get(pk=request.POST['choice'])
@@ -47,3 +56,21 @@ def vote(request, question_id):
         selected_choice.votes += 1
         selected_choice.save()
         return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
+
+
+def signup(request):
+    """Register a new user."""
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            raw_passwd = form.cleaned_data.get('password')
+            user = authenticate(username=username,password=raw_passwd)
+            login(request, user)
+            return redirect('polls')
+        # what if form is not valid?
+        # we should display a message in signup.html
+    else:
+        form = UserCreationForm()
+    return render(request, 'registration/signup.html', {'form': form})
