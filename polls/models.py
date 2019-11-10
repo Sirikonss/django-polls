@@ -2,6 +2,7 @@ import datetime
 
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth.models import User
 
 
 
@@ -27,10 +28,11 @@ class Choice(models.Model):
     def __str__(self):
         return self.choice_text
 
-    def vote_count(id):
-       """Return total votes for a given poll. id is poll id"""
-       # Hint: get the question from the database 
-       #       Easiest is use Question.objects.get(...) 
-       # question has a choice_set attribute that is a set of choices
-       # for that question.
-       
+
+class Vote(models.Model):
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.user}: {self.question}"

@@ -5,9 +5,11 @@ from django.views import generic
 from django.utils import timezone    
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import logout
 
-from .models import Choice, Question
+from .models import Choice, Question, Vote
+import logging
 
 
 class IndexView(generic.ListView):
@@ -58,19 +60,8 @@ def vote(request, question_id):
         return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
 
 
-def signup(request):
-    """Register a new user."""
-    if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            username = form.cleaned_data.get('username')
-            raw_passwd = form.cleaned_data.get('password')
-            user = authenticate(username=username,password=raw_passwd)
-            login(request, user)
-            return redirect('polls')
-        # what if form is not valid?
-        # we should display a message in signup.html
-    else:
-        form = UserCreationForm()
-    return render(request, 'registration/signup.html', {'form': form})
+def vote_count(id):
+    """Return total votes for a given poll. id is poll id"""
+    question = Question.objects.get(pk=id)
+    total_votes = [choice.votes for choice in question.choice_set.all()]
+    return sum(total_votes)
